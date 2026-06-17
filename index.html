@@ -1,0 +1,588 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Interactive educational games and learning labs by Micah Miner." />
+  <title>Learning Games Hub | Micah Miner</title>
+  <style>
+    :root {
+      --ink: #10202b;
+      --ink-2: #162b38;
+      --paper: #f7efe0;
+      --paper-2: #fffaf0;
+      --muted: #63727b;
+      --line: rgba(16, 32, 43, 0.14);
+      --line-light: rgba(247, 239, 224, 0.22);
+      --teal: #4fb7ad;
+      --gold: #d9a13a;
+      --coral: #cf695f;
+      --blue: #7197c9;
+      --green: #7aa86f;
+      --shadow: 0 24px 80px rgba(16, 32, 43, 0.18);
+      --radius: 10px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    a { color: inherit; }
+
+    .skip-link {
+      position: absolute;
+      left: 16px;
+      top: -48px;
+      z-index: 20;
+      padding: 10px 12px;
+      background: var(--ink);
+      color: var(--paper);
+      border-radius: 6px;
+    }
+
+    .skip-link:focus { top: 16px; }
+
+    .wrap {
+      width: min(1180px, calc(100% - 36px));
+      margin: 0 auto;
+    }
+
+    header {
+      background:
+        radial-gradient(circle at 12% 18%, rgba(79, 183, 173, 0.18), transparent 28%),
+        radial-gradient(circle at 92% 8%, rgba(217, 161, 58, 0.18), transparent 24%),
+        linear-gradient(135deg, #0e1d27, #172d3a 58%, #11222e);
+      color: var(--paper);
+      min-height: 84vh;
+      display: grid;
+      align-content: start;
+      border-bottom: 1px solid rgba(16, 32, 43, 0.24);
+    }
+
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 24px;
+      padding: 22px 0;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      font-weight: 900;
+    }
+
+    .monogram {
+      width: 42px;
+      height: 42px;
+      border: 1px solid rgba(247, 239, 224, 0.34);
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      color: var(--gold);
+      font-family: Georgia, "Times New Roman", serif;
+      background: rgba(247, 239, 224, 0.06);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .nav-links a {
+      color: rgba(247, 239, 224, 0.82);
+      text-decoration: none;
+      font-weight: 800;
+      font-size: 0.92rem;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.25fr) minmax(300px, 0.75fr);
+      gap: clamp(28px, 6vw, 86px);
+      align-items: center;
+      padding: clamp(48px, 8vw, 96px) 0 54px;
+    }
+
+    h1, h2, h3 {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      line-height: 1;
+      letter-spacing: 0;
+    }
+
+    h1 {
+      max-width: 860px;
+      font-size: clamp(3.25rem, 8.4vw, 8.2rem);
+    }
+
+    h1 em {
+      color: var(--gold);
+      font-style: normal;
+    }
+
+    .lede {
+      max-width: 760px;
+      color: rgba(247, 239, 224, 0.82);
+      font-size: clamp(1.15rem, 2vw, 1.62rem);
+      line-height: 1.35;
+      margin: 22px 0 0;
+    }
+
+    .hero-panel {
+      border: 1px solid var(--line-light);
+      border-radius: var(--radius);
+      padding: 24px;
+      background: rgba(247, 239, 224, 0.08);
+      box-shadow: var(--shadow);
+      display: grid;
+      gap: 16px;
+    }
+
+    .compass {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .compass span {
+      min-height: 92px;
+      border: 1px solid var(--line-light);
+      border-radius: var(--radius);
+      padding: 14px;
+      display: grid;
+      align-content: end;
+      color: var(--paper);
+      font-weight: 900;
+      background: rgba(16, 32, 43, 0.42);
+    }
+
+    .compass span:nth-child(1) { border-color: rgba(79, 183, 173, 0.55); }
+    .compass span:nth-child(2) { border-color: rgba(217, 161, 58, 0.55); }
+    .compass span:nth-child(3) { border-color: rgba(113, 151, 201, 0.55); }
+    .compass span:nth-child(4) { border-color: rgba(207, 105, 95, 0.55); }
+
+    .hero-panel p {
+      margin: 0;
+      color: rgba(247, 239, 224, 0.76);
+      line-height: 1.42;
+    }
+
+    .button-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 28px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 46px;
+      border-radius: 999px;
+      padding: 12px 18px;
+      border: 1px solid rgba(247, 239, 224, 0.28);
+      color: var(--paper);
+      text-decoration: none;
+      font-weight: 900;
+      background: rgba(247, 239, 224, 0.08);
+    }
+
+    .button.primary {
+      border-color: var(--gold);
+      color: #13222d;
+      background: var(--gold);
+    }
+
+    main {
+      display: grid;
+      gap: clamp(46px, 7vw, 86px);
+      padding: clamp(48px, 7vw, 82px) 0;
+    }
+
+    .section-heading {
+      display: grid;
+      gap: 12px;
+      max-width: 830px;
+    }
+
+    .section-heading .label {
+      margin: 0;
+      color: var(--teal);
+      font-size: 0.78rem;
+      font-weight: 900;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .section-heading h2 {
+      font-size: clamp(2.2rem, 5vw, 5rem);
+    }
+
+    .section-heading p {
+      margin: 0;
+      color: var(--muted);
+      font-size: clamp(1.05rem, 1.45vw, 1.28rem);
+      line-height: 1.44;
+    }
+
+    .filters {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin: 28px 0 22px;
+    }
+
+    .filter {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 10px 14px;
+      background: rgba(255, 255, 255, 0.42);
+      color: var(--ink);
+      cursor: pointer;
+      font-weight: 900;
+    }
+
+    .filter[aria-pressed="true"] {
+      color: var(--paper);
+      background: var(--ink);
+      border-color: var(--ink);
+    }
+
+    .games {
+      display: grid;
+      gap: 18px;
+    }
+
+    .game-card {
+      --accent: var(--teal);
+      display: grid;
+      grid-template-columns: minmax(170px, 0.48fr) minmax(0, 1.1fr) minmax(220px, 0.56fr);
+      gap: clamp(20px, 3vw, 40px);
+      align-items: stretch;
+      border: 1px solid var(--line);
+      border-left: 8px solid var(--accent);
+      border-radius: var(--radius);
+      padding: clamp(20px, 3vw, 32px);
+      background: rgba(255, 255, 255, 0.56);
+      box-shadow: 0 18px 54px rgba(16, 32, 43, 0.09);
+    }
+
+    .game-card[data-track="friction"] { --accent: var(--gold); }
+    .game-card[data-track="media"] { --accent: var(--blue); }
+    .game-card[data-track="history"] { --accent: var(--coral); }
+    .game-card[data-track="source"] { --accent: var(--green); }
+    .game-card[hidden] { display: none; }
+
+    .game-meta {
+      display: grid;
+      align-content: start;
+      gap: 10px;
+      color: var(--muted);
+      font-weight: 800;
+    }
+
+    .year {
+      color: var(--accent);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.75rem;
+    }
+
+    .tag {
+      width: fit-content;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 7px 10px;
+      background: rgba(255, 255, 255, 0.46);
+      color: var(--ink);
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .game-copy {
+      display: grid;
+      align-content: center;
+      gap: 12px;
+    }
+
+    .game-copy h3 {
+      font-size: clamp(1.7rem, 2.8vw, 3rem);
+    }
+
+    .game-copy p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 1.04rem;
+      line-height: 1.44;
+    }
+
+    .game-actions {
+      display: grid;
+      align-content: center;
+      justify-items: start;
+      gap: 12px;
+    }
+
+    .play {
+      border-radius: 999px;
+      padding: 12px 16px;
+      color: var(--paper);
+      background: var(--ink);
+      text-decoration: none;
+      font-weight: 900;
+    }
+
+    .notes {
+      color: var(--muted);
+      font-size: 0.92rem;
+      line-height: 1.4;
+    }
+
+    .hub-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .hub-card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 22px;
+      background: rgba(255, 255, 255, 0.5);
+      text-decoration: none;
+      display: grid;
+      gap: 10px;
+    }
+
+    .hub-card h3 {
+      font-size: 1.55rem;
+    }
+
+    .hub-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    footer {
+      border-top: 1px solid var(--line);
+      padding: 34px 0;
+      color: var(--muted);
+    }
+
+    .footer-grid {
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      flex-wrap: wrap;
+    }
+
+    .footer-grid a {
+      color: var(--ink);
+      font-weight: 900;
+      text-decoration: none;
+    }
+
+    @media (max-width: 900px) {
+      header { min-height: auto; }
+      nav, .hero { grid-template-columns: 1fr; }
+      nav { align-items: flex-start; flex-direction: column; }
+      .nav-links { justify-content: flex-start; }
+      .hero { padding-top: 28px; }
+      .game-card { grid-template-columns: 1fr; }
+      .hub-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 560px) {
+      .wrap { width: min(100% - 28px, 1180px); }
+      h1 { font-size: clamp(2.8rem, 16vw, 5rem); }
+      .compass { grid-template-columns: 1fr; }
+      .button-row, .filters { flex-direction: column; align-items: stretch; }
+      .button, .filter, .play { width: 100%; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#games">Skip to games</a>
+  <header>
+    <nav class="wrap" aria-label="Main navigation">
+      <a class="brand" href="https://micahminer.com/">
+        <span class="monogram">MM</span>
+        <span>Micah Miner</span>
+      </a>
+      <div class="nav-links">
+        <a href="#games">Games</a>
+        <a href="#pathways">Pathways</a>
+        <a href="https://minerclass.github.io/conference-presentations/">Conference Hub</a>
+        <a href="https://minerclass.github.io/writing-sites-hub/">Writing Hub</a>
+      </div>
+    </nav>
+
+    <section class="wrap hero">
+      <div>
+        <h1>Learning Games <em>Hub</em></h1>
+        <p class="lede">Interactive games and learning labs for practicing historical inquiry, media ecology, source evaluation, and pedagogical friction in the age of generative AI.</p>
+        <div class="button-row">
+          <a class="button primary" href="#games">Explore games</a>
+          <a class="button" href="https://minerclass.github.io/conference-presentations/">See presentations</a>
+        </div>
+      </div>
+      <aside class="hero-panel" aria-label="Learning purpose map">
+        <div class="compass">
+          <span>Inquiry</span>
+          <span>Friction</span>
+          <span>Media Ecology</span>
+          <span>Source Judgment</span>
+        </div>
+        <p>These experiences are designed as thought experiments: small, playable spaces where educators can test decisions before translating them back into classrooms, workshops, and public scholarship.</p>
+      </aside>
+    </section>
+  </header>
+
+  <main>
+    <section class="wrap" id="games">
+      <div class="section-heading">
+        <p class="label">Playable public scholarship</p>
+        <h2>Games for practicing judgment.</h2>
+        <p>Each game turns a concept into a decision space: players do not simply receive the framework, they try it, calibrate it, and notice what changes.</p>
+      </div>
+
+      <div class="filters" role="group" aria-label="Filter games by learning purpose">
+        <button class="filter" type="button" data-filter="all" aria-pressed="true">All games</button>
+        <button class="filter" type="button" data-filter="history" aria-pressed="false">Historical inquiry</button>
+        <button class="filter" type="button" data-filter="friction" aria-pressed="false">Pedagogical friction</button>
+        <button class="filter" type="button" data-filter="media" aria-pressed="false">Media ecology</button>
+        <button class="filter" type="button" data-filter="source" aria-pressed="false">Source literacy</button>
+      </div>
+
+      <div class="games" aria-live="polite">
+        <article class="game-card" data-track="history source friction">
+          <div class="game-meta">
+            <span class="year">2026</span>
+            <span class="tag">Historical inquiry</span>
+            <span>Social studies / AI</span>
+          </div>
+          <div class="game-copy">
+            <h3>Keepers of Inquiry</h3>
+            <p>Players respond to a polished AI-generated historical claim by choosing inquiry moves that protect sourcing, context, corroboration, agency, and access.</p>
+          </div>
+          <div class="game-actions">
+            <a class="play" href="https://minerclass.github.io/historical-inquiry-friction/keepers-of-inquiry/">Play Keepers of Inquiry</a>
+            <span class="notes">Best paired with the NCSS historical inquiry deck and algorithm-audit activity.</span>
+          </div>
+        </article>
+
+        <article class="game-card" data-track="source history">
+          <div class="game-meta">
+            <span class="year">2026</span>
+            <span class="tag">Source literacy</span>
+            <span>Historical thinking</span>
+          </div>
+          <div class="game-copy">
+            <h3>Keeper of the Source</h3>
+            <p>A historical inquiry simulator focused on source judgment, evidence, and the interpretive moves that make historical claims defensible.</p>
+          </div>
+          <div class="game-actions">
+            <a class="play" href="https://minerclass.github.io/source_game/">Play Keeper of the Source</a>
+            <span class="notes">Use when the learning goal is sourcing, verification, and careful evidence work.</span>
+          </div>
+        </article>
+
+        <article class="game-card" data-track="friction">
+          <div class="game-meta">
+            <span class="year">2026</span>
+            <span class="tag">Friction</span>
+            <span>Instructional design</span>
+          </div>
+          <div class="game-copy">
+            <h3>Friction Lab</h3>
+            <p>A calibration challenge for distinguishing productive friction, exclusionary friction, and context-dependent difficulty in learning design.</p>
+          </div>
+          <div class="game-actions">
+            <a class="play" href="https://minerclass.github.io/friction-game/">Play Friction Lab</a>
+            <span class="notes">Best for workshops on pedagogical friction, AI policy, and instructional design.</span>
+          </div>
+        </article>
+
+        <article class="game-card" data-track="media">
+          <div class="game-meta">
+            <span class="year">2026</span>
+            <span class="tag">Media ecology</span>
+            <span>Ong / orality</span>
+          </div>
+          <div class="game-copy">
+            <h3>Keeper of the Word</h3>
+            <p>A playable media-ecology journey through the shifting sensorium, helping players feel how communication technologies reorganize thought and culture.</p>
+          </div>
+          <div class="game-actions">
+            <a class="play" href="https://minerclass.github.io/orality_game/">Play Keeper of the Word</a>
+            <span class="notes">Use with media ecology, Ong, secondary orality, and tertiary algorithmicity conversations.</span>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="wrap" id="pathways">
+      <div class="section-heading">
+        <p class="label">Connected hubs</p>
+        <h2>Part of the larger public ecosystem.</h2>
+        <p>The games are companions to presentations, writing, and research-facing resources. They are public-facing learning spaces, not participant-data systems.</p>
+      </div>
+      <div class="hub-grid" style="margin-top:24px;">
+        <a class="hub-card" href="https://minerclass.github.io/conference-presentations/">
+          <h3>Conference Hub</h3>
+          <p>Presentation decks, keynotes, workshops, and public speaking resources.</p>
+        </a>
+        <a class="hub-card" href="https://minerclass.github.io/writing-sites-hub/">
+          <h3>Writing Hub</h3>
+          <p>Public writing, scholarship, and companion sites.</p>
+        </a>
+        <a class="hub-card" href="https://minerclass.github.io/dissertationquestionsbeta/dissertation-sites/">
+          <h3>Dissertation Hub</h3>
+          <p>Public dissertation planning and research-orientation tools.</p>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap footer-grid">
+      <span>Micah Miner - public interactive learning games</span>
+      <a href="https://micahminer.com/">micahminer.com</a>
+    </div>
+  </footer>
+
+  <script>
+    const filters = Array.from(document.querySelectorAll(".filter"));
+    const cards = Array.from(document.querySelectorAll(".game-card"));
+
+    filters.forEach((filter) => {
+      filter.addEventListener("click", () => {
+        const value = filter.dataset.filter;
+        filters.forEach((button) => button.setAttribute("aria-pressed", String(button === filter)));
+        cards.forEach((card) => {
+          const tracks = card.dataset.track.split(" ");
+          card.hidden = value !== "all" && !tracks.includes(value);
+        });
+      });
+    });
+  </script>
+</body>
+</html>
