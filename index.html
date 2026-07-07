@@ -400,6 +400,21 @@
       text-decoration: none;
     }
 
+    .featured-heading {
+      margin-bottom: 22px;
+    }
+
+    .featured-games {
+      display: grid;
+      gap: 18px;
+      margin: 28px 0 42px;
+    }
+
+    .featured-card {
+      background: rgba(255, 255, 255, 0.72);
+      box-shadow: 0 22px 68px rgba(16, 32, 43, 0.12);
+    }
+
     @media (max-width: 900px) {
       header { min-height: auto; }
       nav, .hero { grid-template-columns: 1fr; }
@@ -463,6 +478,46 @@
         <p class="label">Playable public scholarship</p>
         <h2>Games for practicing judgment.</h2>
         <p>Each game turns a concept into a decision space: players do not simply receive the framework, they try it, calibrate it, and notice what changes.</p>
+      </div>
+
+      <div class="section-heading featured-heading" style="margin-top: 40px;">
+        <p class="label">Featured visual simulations</p>
+        <h2>Pedagogical friction made visible.</h2>
+        <p>These two simulations turn the framework into a visual decision space. Load-Bearing focuses on the difference between polished artifacts and durable learning. Trailhead focuses on productive struggle, access barriers, and equitable scaffolding.</p>
+      </div>
+
+      <div class="featured-games">
+        <article class="game-card featured-card" data-track="friction">
+          <div class="game-meta">
+            <span class="year">2026</span>
+            <span class="tag">Featured simulation</span>
+            <span>Pedagogical friction / instructional design</span>
+          </div>
+          <div class="game-copy">
+            <h3>Load-Bearing</h3>
+            <p>Build a unit; watch it become a bridge. Structural thinking holds the transfer load, while polish alone shears off. An X-ray reveals the difference between the artifact of learning and the learning itself.</p>
+          </div>
+          <div class="game-actions">
+            <a class="play" href="https://minerclass.github.io/load-bearing/">Play Load-Bearing</a>
+            <span class="notes">Flagship visual simulation for unproductive success, process evidence, and the artifact-versus-learning distinction.</span>
+          </div>
+        </article>
+
+        <article class="game-card featured-card" data-track="friction">
+          <div class="game-meta">
+            <span class="year">2026</span>
+            <span class="tag">Featured simulation</span>
+            <span>Pedagogical friction / equity / scaffolding</span>
+          </div>
+          <div class="game-copy">
+            <h3>Trailhead</h3>
+            <p>One trail, four hikers. Watch productive struggle and exclusionary barriers shape who reaches the summit, then redesign the route so every learner can climb without bypassing the work.</p>
+          </div>
+          <div class="game-actions">
+            <a class="play" href="https://minerclass.github.io/trailhead/">Play Trailhead</a>
+            <span class="notes">Equity-focused companion simulation for calibrated scaffolding, device bans, AI bypass, and access barriers.</span>
+          </div>
+        </article>
       </div>
 
       <div class="filters" role="group" aria-label="Filter games by learning purpose">
@@ -599,38 +654,6 @@
           <div class="game-actions">
             <a class="play" href="https://minerclass.github.io/orality_game/">Play Keeper of the Word</a>
             <span class="notes">Use with media ecology, Ong, secondary orality, and tertiary algorithmicity conversations.</span>
-          </div>
-        </article>
-
-        <article class="game-card" data-track="friction">
-          <div class="game-meta">
-            <span class="year">2026</span>
-            <span class="tag">Pedagogical friction</span>
-            <span>Instructional design</span>
-          </div>
-          <div class="game-copy">
-            <h3>Load-Bearing</h3>
-            <p>Build a unit; watch it become a bridge. Structural thinking holds the transfer load &mdash; polish alone shears off. An X-ray for the difference between the artifact of learning and the learning.</p>
-          </div>
-          <div class="game-actions">
-            <a class="play" href="https://minerclass.github.io/load-bearing/">Play Load-Bearing</a>
-            <span class="notes">Visualizes the noetic and structural dimensions of pedagogical friction.</span>
-          </div>
-        </article>
-
-        <article class="game-card" data-track="friction">
-          <div class="game-meta">
-            <span class="year">2026</span>
-            <span class="tag">Pedagogical friction</span>
-            <span>Equity / instructional design</span>
-          </div>
-          <div class="game-copy">
-            <h3>Trailhead</h3>
-            <p>One trail, four hikers. Watch productive struggle and exclusionary barriers gate different people &mdash; then redesign until everyone summits on their own feet.</p>
-          </div>
-          <div class="game-actions">
-            <a class="play" href="https://minerclass.github.io/trailhead/">Play Trailhead</a>
-            <span class="notes">Visualizes productive friction vs. barriers and the English Learner Paradox.</span>
           </div>
         </article>
       </div>
