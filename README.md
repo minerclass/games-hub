@@ -9,6 +9,7 @@ The hub collects playable experiences connected to:
 - Media ecology
 - Pedagogical friction
 - Generative AI and learning design
+- Technoskepticism and technology governance
 
 ## Live Site
 
@@ -18,6 +19,7 @@ After publication, the hub is available at:
 
 ## Included Games
 
+- [Answerable](https://minerclass.github.io/answerable/)
 - [Keepers of Inquiry](https://minerclass.github.io/historical-inquiry-friction/keepers-of-inquiry/)
 - [Keeper of the Source](https://minerclass.github.io/source_game/)
 - [Friction Lab](https://minerclass.github.io/friction-game/)

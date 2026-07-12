@@ -11,7 +11,7 @@
 
 ## What the game is
 
-Static catalog deck indexing all 13 interactive simulations in the visual games ecosystem, including search filters by track (History, Friction, Media, Source).
+Static catalog deck indexing all 14 interactive simulations in the visual games ecosystem, including featured experiences and search filters by track (History, Friction, Media, Source).
 
 ## Key implementation decisions
 
@@ -20,7 +20,15 @@ Static catalog deck indexing all 13 interactive simulations in the visual games 
 
 ## Verification checklist
 
-- [x] Time-to-play chips (e.g. `⏱️ ~10 min`) added to all 13 featured and standard game cards
-- [x] Target audience chips (e.g. `🎓 Teacher PD`, `🏫 Grade 6-12`) added to all 13 cards
+- [x] Time-to-play chips (e.g. `⏱️ ~10 min`) added to all 14 featured and standard game cards
+- [x] Target audience chips (e.g. `🎓 Teacher PD`, `🏫 Grade 6-12`) added to all 14 cards
 - [x] Filtering logic verified: clicking filters (e.g. "Historical Inquiry", "Pedagogical Friction") filters cards correctly without errors
 - [x] Passed local verification with zero console warnings
+
+
+## 2026-07-12 - Answerable integration
+
+- Added Answerable as a third featured visual simulation.
+- Expanded the hub description to include technoskepticism.
+- Added the public Answerable URL to the README.
+- Pending at edit time: live Answerable deployment, responsive hub verification, link verification, and final catalog count update.
