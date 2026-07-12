@@ -31,4 +31,4 @@ Static catalog deck indexing all 14 interactive simulations in the visual games 
 - Added Answerable as a third featured visual simulation.
 - Expanded the hub description to include technoskepticism.
 - Added the public Answerable URL to the README.
-- Pending at edit time: live Answerable deployment, responsive hub verification, link verification, and final catalog count update.
+- Verified live after deployment: one Answerable link points to the public game, the hub reports 14 cards, no console errors appeared, and no horizontal overflow occurred at 390px.
