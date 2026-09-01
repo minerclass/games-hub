@@ -239,7 +239,11 @@
 
     .section-heading .label {
       margin: 0;
-      color: var(--teal);
+      /* Was var(--teal) (#4fb7ad), which measured 2.11 against the paper ground
+         and is a real barrier, not a near miss. The teal ink from the shared
+         token layer measures 4.96 here. The vivid teal stays everywhere it is
+         used as a border, fill, or motif. */
+      color: var(--mjm-teal-ink, #2a7268);
       font-size: 0.78rem;
       font-weight: 900;
       letter-spacing: 0.14em;

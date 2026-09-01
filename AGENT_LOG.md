@@ -5,6 +5,24 @@ credentials, or tokens.
 
 ---
 
+## 2026-08-31 - Fix a pre-existing contrast barrier on section labels
+
+Found while probing every repo after CI caught a contrast regression elsewhere. This one
+**predates all recent work**: it measured the same with the shared tokens disabled.
+
+`.section-heading .label` ("Playable public scholarship", "Featured visual simulations",
+"Connected hubs") used `--teal` (`#4fb7ad`) as small uppercase text on the paper ground,
+measuring **2.11** against a 4.5 threshold. That is a real barrier, not a near miss.
+
+Changed to the shared token layer's paper-ground teal ink (`#2a7268`), which measures
+**4.96** there. The vivid `--teal` is untouched everywhere it is a border, fill, or motif
+colour.
+
+**Verified.** 188 text-bearing elements probed against their composited backdrops:
+**zero** failures, down from three. Tightest remaining pair is 4.72 against 4.5.
+
+---
+
 ## 2026-08-31 - Adopt the shared ecosystem design tokens
 
 Links https://minerclass.github.io/tokens.css before the page styles and points this
