@@ -5,6 +5,23 @@ credentials, or tokens.
 
 ---
 
+## 2026-08-31 - Adopt the shared ecosystem design tokens
+
+Links https://minerclass.github.io/tokens.css before the page styles and points this
+page's ground, ink, and rules at the shared tokens while keeping its own accents. The
+page's ground is unchanged: a paper page stays paper.
+
+**Every reference carries a fallback** equal to the pre-adoption value, because a bare
+`var(--mjm-bg)` is invalid at computed-value time if the token file fails to load, which
+would break the page rather than leave it unchanged.
+
+The track accent colours and their text-safe ink variants stay local: they drive the per-track card motifs and the finder, which are this hub's own system.
+
+**Verified in a real browser.** Token sheet loads; body renders light with a contrast ratio
+of 14.54; tag balance clean; zero console errors.
+
+---
+
 ## 2026-08-31 — Text-safe accent variants for the year numeral
 
 **Context.** Closes the accessibility finding recorded in the entry below, at the author's

@@ -1,18 +1,23 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-mjm-ground="light">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="description" content="Interactive educational games and learning labs by Micah Miner." />
   <title>Learning Games Hub | Micah Miner</title>
+  <link rel="stylesheet" href="https://minerclass.github.io/tokens.css">
   <style>
     :root {
-      --ink: #10202b;
+      /* Ground, ink, and rules come from the shared ecosystem tokens at
+         https://minerclass.github.io/tokens.css. Each fallback is this page's
+         pre-adoption value, so a failed load changes nothing. Accents stay local. */
+      --ink: var(--mjm-ink, #10202b);
       --ink-2: #162b38;
-      --paper: #f7efe0;
-      --paper-2: #fffaf0;
-      --muted: #63727b;
-      --line: rgba(16, 32, 43, 0.14);
+      --paper: var(--mjm-bg, #f7efe0);
+      --paper-2: var(--mjm-surface, #fffaf0);
+      --muted: var(--mjm-muted, #63727b);
+      --line: var(--mjm-line, rgba(16, 32, 43, 0.14));
+      --mjm-accent: var(--mjm-teal, #4fb7ad);
       --line-light: rgba(247, 239, 224, 0.22);
       --teal: #4fb7ad;
       --gold: #d9a13a;
