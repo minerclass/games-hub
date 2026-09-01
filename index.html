@@ -19,6 +19,16 @@
       --coral: #cf695f;
       --blue: #7197c9;
       --green: #7aa86f;
+      /* Text-safe variants of the track colours. The vivid values above stay on
+         borders and motifs, which are decorative; the .year numeral is real text
+         at 28px/800, so it needs 3:1 as WCAG large text. Every value below clears
+         4.5:1 against the composited card background, so it is safe at any size.
+         Measured ratios: teal 4.90, gold 5.17, coral 5.75, blue 5.05, green 5.30. */
+      --teal-ink: #2d7a71;
+      --gold-ink: #8a6412;
+      --coral-ink: #a94236;
+      --blue-ink: #3f6ea8;
+      --green-ink: #4a7340;
       --shadow: 0 24px 80px rgba(16, 32, 43, 0.18);
       --radius: 10px;
     }
@@ -272,6 +282,7 @@
 
     .game-card {
       --accent: var(--teal);
+      --accent-ink: var(--teal-ink);
       display: grid;
       grid-template-columns: minmax(170px, 0.48fr) minmax(0, 1.1fr) minmax(220px, 0.56fr);
       gap: clamp(20px, 3vw, 40px);
@@ -284,10 +295,16 @@
       box-shadow: 0 18px 54px rgba(16, 32, 43, 0.09);
     }
 
-    .game-card[data-track="friction"] { --accent: var(--gold); }
-    .game-card[data-track="media"] { --accent: var(--blue); }
-    .game-card[data-track="history"] { --accent: var(--coral); }
-    .game-card[data-track="source"] { --accent: var(--green); }
+    /* Accent by primary track. These were previously exact attribute matches on
+       data-track, but that holds a space-separated list, so the rules only ever
+       fired for single-token cards and left 10 of 15 on the default teal. The
+       motif class carries the primary track (the first token), so key the colour
+       off that instead. A browser without :has() support simply falls back to
+       teal everywhere, which is the appearance these rules already produced. */
+    .game-card:has(.motif-friction) { --accent: var(--gold); --accent-ink: var(--gold-ink); }
+    .game-card:has(.motif-media) { --accent: var(--blue); --accent-ink: var(--blue-ink); }
+    .game-card:has(.motif-history) { --accent: var(--coral); --accent-ink: var(--coral-ink); }
+    .game-card:has(.motif-source) { --accent: var(--green); --accent-ink: var(--green-ink); }
     .game-card[hidden] { display: none; }
 
     .game-meta {
@@ -299,7 +316,7 @@
     }
 
     .year {
-      color: var(--accent);
+      color: var(--accent-ink);
       font-family: Georgia, "Times New Roman", serif;
       font-size: 1.75rem;
     }
@@ -432,6 +449,288 @@
       .button-row, .filters { flex-direction: column; align-items: stretch; }
       .button, .filter, .play { width: 100%; text-align: center; }
     }
+
+    /* ---- Game finder ----------------------------------------------------
+       Three filter groups that combine, a live result count, and an empty
+       state. Filter values mirror the tags already printed on each card. */
+    .finder {
+      margin: 28px 0 22px;
+      padding: clamp(16px, 2.4vw, 24px);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.42);
+    }
+
+    .finder-head {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .finder-head h3 {
+      margin: 0;
+      font-size: 1.15rem;
+    }
+
+    .finder-reset {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 6px 14px;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      font: inherit;
+      font-size: 0.85rem;
+    }
+
+    .finder-reset:hover {
+      color: var(--ink);
+      border-color: var(--ink);
+    }
+
+    .finder .filters {
+      align-items: center;
+      margin: 14px 0 0;
+    }
+
+    .filter-label {
+      min-width: 118px;
+      font-size: 0.78rem;
+      font-weight: 900;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .finder-count {
+      margin: 18px 0 0;
+      font-size: 0.9rem;
+      font-weight: 900;
+      color: var(--muted);
+    }
+
+    .games-empty {
+      margin: 18px 0 0;
+      padding: 32px 24px;
+      border: 1px dashed var(--line);
+      border-radius: var(--radius);
+      text-align: center;
+      color: var(--muted);
+    }
+
+    /* The page had no visible keyboard focus style; every finder control is
+       keyboard-operable, so define one ring and reuse it. */
+    :focus-visible {
+      outline: 3px solid var(--teal);
+      outline-offset: 2px;
+    }
+
+    @media (max-width: 560px) {
+      .filter-label {
+        min-width: 0;
+        flex-basis: 100%;
+      }
+
+      /* The base 560px rule stacks every filter full-width. With three groups
+         that makes the finder roughly a full screen tall before a reader
+         reaches a single game, so let these wrap inline instead. */
+      .finder .filters {
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .finder .filter {
+        width: auto;
+        text-align: left;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+
+    /* ---- Track motifs ---------------------------------------------------
+       One motif per learning track rather than one per game: a small abstract
+       figure of that track's core move. Static and legible at rest, animating
+       only on hover or when keyboard focus enters the card, and held still
+       entirely under prefers-reduced-motion. Decorative, so aria-hidden.
+       Only the form is per-track; the colour follows the card's --accent. */
+    .motif {
+      position: relative;
+      justify-self: start;
+      width: 72px;
+      height: 44px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.5);
+      overflow: hidden;
+    }
+
+    .motif span {
+      position: absolute;
+      background: var(--accent);
+    }
+
+    /* Friction: something crossing a ridged surface and losing speed. */
+    .motif-friction {
+      background-image: repeating-linear-gradient(90deg, transparent 0 9px, rgba(16, 32, 43, 0.13) 9px 10px);
+    }
+
+    .motif-friction span {
+      top: 50%;
+      left: 7px;
+      width: 9px;
+      height: 9px;
+      margin-top: -4.5px;
+      border-radius: 50%;
+      opacity: 0.9;
+    }
+
+    /* Media ecology: one utterance expanding through a sensorium. */
+    .motif-media span {
+      top: 50%;
+      left: 50%;
+      width: 10px;
+      height: 10px;
+      margin: -5px 0 0 -5px;
+      border-radius: 50%;
+      background: transparent;
+      border: 1.5px solid var(--accent);
+    }
+
+    .motif-media span:nth-child(1) { opacity: 0.8; transform: scale(1); }
+    .motif-media span:nth-child(2) { opacity: 0.45; transform: scale(2); animation-delay: 0.7s; }
+    .motif-media span:nth-child(3) { opacity: 0.2; transform: scale(3); animation-delay: 1.4s; }
+
+    /* Historical inquiry: reading a period, then placing it in sequence. */
+    .motif-history::before {
+      content: "";
+      position: absolute;
+      left: 8px;
+      right: 8px;
+      bottom: 14px;
+      height: 1px;
+      background: rgba(16, 32, 43, 0.22);
+    }
+
+    .motif-history::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, transparent, var(--accent), transparent);
+      opacity: 0.32;
+      transform: translateX(-100%);
+    }
+
+    .motif-history span {
+      bottom: 14px;
+      width: 2px;
+      border-radius: 1px;
+      opacity: 0.6;
+    }
+
+    .motif-history span:nth-child(1) { left: 13px; height: 9px; }
+    .motif-history span:nth-child(2) { left: 27px; height: 16px; }
+    .motif-history span:nth-child(3) { left: 41px; height: 9px; }
+    .motif-history span:nth-child(4) { left: 55px; height: 13px; }
+
+    /* Source judgment: checking claims one at a time before accepting them. */
+    .motif-source::after {
+      content: "";
+      position: absolute;
+      left: 51px;
+      top: 11px;
+      width: 12px;
+      height: 12px;
+      border: 1.5px solid var(--accent);
+      border-radius: 50%;
+      opacity: 0.7;
+    }
+
+    .motif-source span {
+      left: 12px;
+      height: 3px;
+      border-radius: 2px;
+    }
+
+    .motif-source span:nth-child(1) { top: 13px; width: 32px; opacity: 0.55; }
+    .motif-source span:nth-child(2) { top: 21px; width: 40px; opacity: 0.32; animation-delay: 0.3s; }
+    .motif-source span:nth-child(3) { top: 29px; width: 26px; opacity: 0.32; animation-delay: 0.6s; }
+
+    /* Animation is opt-in: hover, or keyboard focus reaching the play link. */
+    .game-card:hover .motif-friction span,
+    .game-card:focus-within .motif-friction span {
+      animation: motif-slide 2s cubic-bezier(0.12, 0.72, 0.2, 1) infinite;
+    }
+
+    .game-card:hover .motif-media span,
+    .game-card:focus-within .motif-media span {
+      animation: motif-ring 2.4s ease-out infinite;
+    }
+
+    .game-card:hover .motif-history::after,
+    .game-card:focus-within .motif-history::after {
+      animation: motif-sweep 2.2s ease-in-out infinite;
+    }
+
+    .game-card:hover .motif-source span,
+    .game-card:focus-within .motif-source span {
+      animation: motif-verify 2.4s ease-in-out infinite;
+    }
+
+    .game-card:hover .motif-source::after,
+    .game-card:focus-within .motif-source::after {
+      animation: motif-lens 2.4s ease-in-out infinite;
+    }
+
+    @keyframes motif-slide {
+      0%   { transform: translateX(0); opacity: 0.35; }
+      65%  { transform: translateX(44px); opacity: 1; }
+      100% { transform: translateX(50px); opacity: 0; }
+    }
+
+    @keyframes motif-ring {
+      0%   { transform: scale(0.4); opacity: 0; }
+      18%  { opacity: 0.85; }
+      100% { transform: scale(3.4); opacity: 0; }
+    }
+
+    @keyframes motif-sweep {
+      0%   { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+
+    @keyframes motif-verify {
+      0%, 100% { opacity: 0.3; }
+      45%      { opacity: 1; }
+    }
+
+    @keyframes motif-lens {
+      0%, 100% { transform: translateY(0); }
+      50%      { transform: translateY(17px); }
+    }
+
+    /* Stated explicitly rather than relying on the global duration override:
+       under reduced motion the motifs simply hold their resting figure. */
+    @media (prefers-reduced-motion: reduce) {
+      .game-card:hover .motif span,
+      .game-card:focus-within .motif span,
+      .game-card:hover .motif::after,
+      .game-card:focus-within .motif::after {
+        animation: none;
+      }
+    }
   </style>
 </head>
 <body>
@@ -489,6 +788,8 @@
       <div class="featured-games">
         <article class="game-card featured-card" data-track="friction">
           <div class="game-meta">
+            <div class="motif motif-friction" aria-hidden="true"><span></span></div>
+
             <span class="year">2026</span>
             <span class="tag">Featured simulation</span>
             <span class="tag">⏱️ ~15 min</span>
@@ -507,6 +808,8 @@
 
         <article class="game-card featured-card" data-track="friction">
           <div class="game-meta">
+            <div class="motif motif-friction" aria-hidden="true"><span></span></div>
+
             <span class="year">2026</span>
             <span class="tag">Featured simulation</span>
             <span class="tag">⏱️ ~15 min</span>
@@ -524,6 +827,8 @@
         </article>
         <article class="game-card featured-card" data-track="friction media governance">
           <div class="game-meta">
+            <div class="motif motif-friction" aria-hidden="true"><span></span></div>
+
             <span class="year">2026</span>
             <span class="tag">Featured simulation</span>
             <span class="tag">&#9201; ~15 min</span>
@@ -541,17 +846,46 @@
         </article>
       </div>
 
-      <div class="filters" role="group" aria-label="Filter games by learning purpose">
-        <button class="filter" type="button" data-filter="all" aria-pressed="true">All games</button>
-        <button class="filter" type="button" data-filter="history" aria-pressed="false">Historical inquiry</button>
-        <button class="filter" type="button" data-filter="friction" aria-pressed="false">Pedagogical friction</button>
-        <button class="filter" type="button" data-filter="media" aria-pressed="false">Media ecology</button>
-        <button class="filter" type="button" data-filter="source" aria-pressed="false">Source literacy</button>
+      <!-- Find your game. Three independent filter groups combined with AND.
+           Each value mirrors a tag already printed on the card below it. -->
+      <div class="finder">
+        <div class="finder-head">
+          <h3>Find your game.</h3>
+          <button class="finder-reset" type="button" id="finderReset">Reset filters</button>
+        </div>
+
+        <div class="filters" role="group" aria-label="Filter by learning purpose">
+          <span class="filter-label">Purpose</span>
+          <button class="filter" type="button" data-group="track" data-filter="all" aria-pressed="true">All</button>
+          <button class="filter" type="button" data-group="track" data-filter="history" aria-pressed="false">Historical inquiry</button>
+          <button class="filter" type="button" data-group="track" data-filter="friction" aria-pressed="false">Pedagogical friction</button>
+          <button class="filter" type="button" data-group="track" data-filter="media" aria-pressed="false">Media ecology</button>
+          <button class="filter" type="button" data-group="track" data-filter="source" aria-pressed="false">Source literacy</button>
+        </div>
+
+        <div class="filters" role="group" aria-label="Filter by session length">
+          <span class="filter-label">Session length</span>
+          <button class="filter" type="button" data-group="length" data-filter="all" aria-pressed="true">Any</button>
+          <button class="filter" type="button" data-group="length" data-filter="short" aria-pressed="false">10 min or less</button>
+          <button class="filter" type="button" data-group="length" data-filter="medium" aria-pressed="false">About 15 min</button>
+          <button class="filter" type="button" data-group="length" data-filter="long" aria-pressed="false">20 min or more</button>
+        </div>
+
+        <div class="filters" role="group" aria-label="Filter by audience">
+          <span class="filter-label">Audience</span>
+          <button class="filter" type="button" data-group="audience" data-filter="all" aria-pressed="true">Any</button>
+          <button class="filter" type="button" data-group="audience" data-filter="classroom" aria-pressed="false">Classroom, grades 6-12</button>
+          <button class="filter" type="button" data-group="audience" data-filter="educator" aria-pressed="false">Educators and leaders</button>
+        </div>
+
+        <p class="finder-count" id="finderCount" role="status">Showing all 12 games.</p>
       </div>
 
-      <div class="games" aria-live="polite">
-        <article class="game-card" data-track="friction media source">
+      <div class="games">
+        <article class="game-card" data-length="long" data-audience="educator" data-track="friction media source">
           <div class="game-meta">
+            <div class="motif motif-friction" aria-hidden="true"><span></span></div>
+
             <span class="year">2026</span>
             <span class="tag">Pedagogical friction</span>
             <span class="tag">&#9201; ~25 min</span>
@@ -567,8 +901,10 @@
             <span class="notes">Badges, progress, and a 105-source codex that unlocks as you go. The dissertation's Chapter Two literature review, made playable.</span>
           </div>
         </article>
-        <article class="game-card" data-track="friction history">
+        <article class="game-card" data-length="short" data-audience="classroom" data-track="friction history">
           <div class="game-meta">
+            <div class="motif motif-friction" aria-hidden="true"><span></span></div>
+
             <span class="year">2026</span>
             <span class="tag">Pedagogical friction</span>
             <span class="tag">⏱️ ~10 min</span>
@@ -585,8 +921,10 @@
           </div>
         </article>
 
-        <article class="game-card" data-track="friction">
+        <article class="game-card" data-length="short" data-audience="classroom" data-track="friction">
           <div class="game-meta">
+            <div class="motif motif-friction" aria-hidden="true"><span></span></div>
+
             <span class="year">2026</span>
             <span class="tag">Pedagogical friction</span>
             <span class="tag">⏱️ ~10 min</span>
@@ -603,8 +941,10 @@
           </div>
         </article>
 
-        <article class="game-card" data-track="media source">
+        <article class="game-card" data-length="short" data-audience="classroom" data-track="media source">
           <div class="game-meta">
+            <div class="motif motif-media" aria-hidden="true"><span></span><span></span><span></span></div>
+
             <span class="year">2026</span>
             <span class="tag">Media ecology</span>
             <span class="tag">⏱️ ~10 min</span>
@@ -620,8 +960,10 @@
             <span class="notes">Flowing river simulation for lateral reading, source audits, and tertiary algorithmicity.</span>
           </div>
         </article>
-        <article class="game-card" data-track="history source friction">
+        <article class="game-card" data-length="medium" data-audience="classroom" data-track="history source friction">
           <div class="game-meta">
+            <div class="motif motif-history" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+
             <span class="year">2026</span>
             <span class="tag">Historical inquiry</span>
             <span class="tag">⏱️ ~15 min</span>
@@ -638,8 +980,10 @@
           </div>
         </article>
 
-        <article class="game-card" data-track="friction history">
+        <article class="game-card" data-length="medium" data-audience="educator" data-track="friction history">
           <div class="game-meta">
+            <div class="motif motif-friction" aria-hidden="true"><span></span></div>
+
             <span class="year">2026</span>
             <span class="tag">Pedagogical friction</span>
             <span class="tag">⏱️ ~15 min</span>
@@ -656,8 +1000,10 @@
           </div>
         </article>
 
-        <article class="game-card" data-track="history source friction">
+        <article class="game-card" data-length="short" data-audience="classroom" data-track="history source friction">
           <div class="game-meta">
+            <div class="motif motif-history" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+
             <span class="year">2026</span>
             <span class="tag">Historical inquiry</span>
             <span class="tag">⏱️ ~10 min</span>
@@ -674,8 +1020,10 @@
           </div>
         </article>
 
-        <article class="game-card" data-track="history friction">
+        <article class="game-card" data-length="long" data-audience="classroom" data-track="history friction">
           <div class="game-meta">
+            <div class="motif motif-history" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+
             <span class="year">2026</span>
             <span class="tag">Historical inquiry</span>
             <span class="tag">⏱️ ~20 min</span>
@@ -692,8 +1040,10 @@
           </div>
         </article>
 
-        <article class="game-card" data-track="friction source">
+        <article class="game-card" data-length="medium" data-audience="classroom" data-track="friction source">
           <div class="game-meta">
+            <div class="motif motif-friction" aria-hidden="true"><span></span></div>
+
             <span class="year">2026</span>
             <span class="tag">Civic inquiry</span>
             <span class="tag">⏱️ ~15 min</span>
@@ -710,8 +1060,10 @@
           </div>
         </article>
 
-        <article class="game-card" data-track="source history">
+        <article class="game-card" data-length="short" data-audience="classroom" data-track="source history">
           <div class="game-meta">
+            <div class="motif motif-source" aria-hidden="true"><span></span><span></span><span></span></div>
+
             <span class="year">2026</span>
             <span class="tag">Source literacy</span>
             <span class="tag">⏱️ ~10 min</span>
@@ -728,8 +1080,10 @@
           </div>
         </article>
 
-        <article class="game-card" data-track="friction">
+        <article class="game-card" data-length="short" data-audience="educator" data-track="friction">
           <div class="game-meta">
+            <div class="motif motif-friction" aria-hidden="true"><span></span></div>
+
             <span class="year">2026</span>
             <span class="tag">Friction</span>
             <span class="tag">⏱️ ~10 min</span>
@@ -746,8 +1100,10 @@
           </div>
         </article>
 
-        <article class="game-card" data-track="media">
+        <article class="game-card" data-length="medium" data-audience="educator" data-track="media">
           <div class="game-meta">
+            <div class="motif motif-media" aria-hidden="true"><span></span><span></span><span></span></div>
+
             <span class="year">2026</span>
             <span class="tag">Media ecology</span>
             <span class="tag">⏱️ ~15 min</span>
@@ -764,6 +1120,8 @@
           </div>
         </article>
       </div>
+
+      <p class="games-empty" id="gamesEmpty" hidden>No games match that combination. Try widening one of the filters, or reset them.</p>
     </section>
 
     <section class="wrap" id="pathways">
@@ -797,19 +1155,64 @@
   </footer>
 
   <script>
-    const filters = Array.from(document.querySelectorAll(".filter"));
-    const cards = Array.from(document.querySelectorAll(".games .game-card"));
+    // Game finder. Three independent filter groups combined with AND. Values
+    // come from data attributes that mirror the tags already visible on each
+    // card, so the filter can never disagree with what a reader sees. Native
+    // buttons give Enter/Space and focus order without extra key wiring.
+    (function () {
+      var grid = document.querySelector(".games");
+      if (!grid) return;
 
-    filters.forEach((filter) => {
-      filter.addEventListener("click", () => {
-        const value = filter.dataset.filter;
-        filters.forEach((button) => button.setAttribute("aria-pressed", String(button === filter)));
-        cards.forEach((card) => {
-          const tracks = card.dataset.track.split(" ");
-          card.hidden = value !== "all" && !tracks.includes(value);
+      var buttons = Array.prototype.slice.call(document.querySelectorAll(".filter[data-group]"));
+      var cards = Array.prototype.slice.call(grid.querySelectorAll(".game-card"));
+      var countEl = document.getElementById("finderCount");
+      var emptyEl = document.getElementById("gamesEmpty");
+      var resetEl = document.getElementById("finderReset");
+      var state = { track: "all", length: "all", audience: "all" };
+
+      function matches(card) {
+        if (state.track !== "all" && card.dataset.track.split(" ").indexOf(state.track) === -1) return false;
+        if (state.length !== "all" && card.dataset.length !== state.length) return false;
+        if (state.audience !== "all" && card.dataset.audience !== state.audience) return false;
+        return true;
+      }
+
+      function apply() {
+        var shown = 0;
+        cards.forEach(function (card) {
+          var ok = matches(card);
+          card.hidden = !ok;
+          if (ok) shown += 1;
+        });
+
+        buttons.forEach(function (btn) {
+          btn.setAttribute("aria-pressed", state[btn.dataset.group] === btn.dataset.filter ? "true" : "false");
+        });
+
+        if (emptyEl) emptyEl.hidden = shown !== 0;
+        if (countEl) {
+          countEl.textContent = shown === cards.length
+            ? "Showing all " + cards.length + " games."
+            : "Showing " + shown + " of " + cards.length + " games.";
+        }
+      }
+
+      buttons.forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          state[btn.dataset.group] = btn.dataset.filter;
+          apply();
         });
       });
-    });
+
+      if (resetEl) {
+        resetEl.addEventListener("click", function () {
+          state = { track: "all", length: "all", audience: "all" };
+          apply();
+        });
+      }
+
+      apply();
+    })();
   </script>
 </body>
 </html>
