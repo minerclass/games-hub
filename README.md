@@ -25,6 +25,7 @@ After publication, the hub is available at:
 - [Friction Lab](https://minerclass.github.io/friction-game/)
 - [Keeper of the Word](https://minerclass.github.io/orality_game/)
 - [Echoes: From forest to signal](https://minerclass.github.io/echoes/)
+- [Groundwork: The same job, three times](https://minerclass.github.io/groundwork/)
 
 ## Run Locally
 
