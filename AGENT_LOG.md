@@ -4,6 +4,14 @@ Append-only. Newest entry first. No participant data, committee or faculty names
 credentials, or tokens.
 
 ---
+## 2026-10-10 - Friction Lab split into two cards
+
+Friction Lab shipped a sixty-second sort as its default experience, with the original
+design simulation preserved at `/classic/`. The hub now carries one card per experience
+(Sixty Seconds at ~2 min; The Design Version at ~10 min) so the length filter is honest.
+The pre-script "Showing all N games" text was 12 while 14 cards rendered; it now matches
+the card count (15). The script recomputes it on load regardless.
+
 
 ## 2026-08-31 - Fix a pre-existing contrast barrier on section labels
 
